@@ -1,0 +1,26 @@
+server:
+  compression:
+    enabled: true
+    mime-types: application/json
+    min-response-size: 1024
+  port: 8084
+
+keycloak:
+  realm: test
+  auth-server-url: http://localhost:8080/auth/
+  resource: resource
+  credentials.secret: "228ce46e-4eb3-4a58-a433-c45ebc537c86"
+#  use-resource-role-mappings: true
+  bearer-only: true # You can't auth from this application
+
+#Actuator
+management:
+  security:
+    enabled: false
+
+endpoints:
+  enabled: true
+  info:
+    enabled: true
+  health:
+    enabled: true
