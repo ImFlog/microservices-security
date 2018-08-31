@@ -24,7 +24,10 @@ Here we can call (via the frontend):
 ## Requirements
 You need Java 8, Maven, and NodeJS.
 
-You also have to spawn a local Keycloak instance: https://www.keycloak.org/docs/latest/getting_started/index.html
+You also need to start a local Keycloak instance, to do so you can use the provided docker-compose file:
+`$ docker-compose up -d`.
+The port 8080 is mapped to your local port, you should be able to login as `admin`/ `admin` on http://localhost:8080.
+
 
 Then you will have to start the three apps (3 terminals)
 ```
