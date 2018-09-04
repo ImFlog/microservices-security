@@ -6,10 +6,9 @@ server:
   port: 8084
 
 keycloak:
-  realm: test
+  realm: master
   auth-server-url: http://localhost:8080/auth/
   resource: resource
-  credentials.secret: "228ce46e-4eb3-4a58-a433-c45ebc537c86"
 #  use-resource-role-mappings: true
   bearer-only: true # You can't auth from this application
 
@@ -17,10 +16,10 @@ keycloak:
 management:
   security:
     enabled: false
-
-endpoints:
-  enabled: true
-  info:
-    enabled: true
-  health:
-    enabled: true
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+  endpoints:
+    enabled-by-default: true
