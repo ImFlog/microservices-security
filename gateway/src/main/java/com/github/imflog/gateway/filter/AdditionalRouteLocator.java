@@ -1,15 +1,15 @@
 package com.github.imflog.gateway.filter;
 
-import javax.annotation.PostConstruct;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import lombok.Data;
+import javax.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -23,9 +23,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- * Conditional class which will work in case of <code>channelManagementEnabled</code> property
- * is {@literal false} in configuration.
- * This class just add more user defined routes.
+ * Conditional class which will work in case of <code>channelManagementEnabled</code> property is {@literal false} in
+ * configuration. This class just add more user defined routes.
  */
 @Slf4j
 @Getter
@@ -35,12 +34,14 @@ import org.springframework.util.StringUtils;
 @ConditionalOnProperty(name = "channelManagementEnabled", havingValue = "false")
 public class AdditionalRouteLocator extends DiscoveryClientRouteLocator {
 
+    private Logger logger = LoggerFactory.getLogger(AdditionalRouteLocator.class);
+
     /* Additional routes, placed in property file */
     private Map<String, ZuulRoute> additionalRoutes = new LinkedHashMap<>();
 
     @Autowired
     public AdditionalRouteLocator(ServerProperties server, DiscoveryClient discovery,
-                                  ZuulProperties properties, ServiceRouteMapper serviceRouteMapper) {
+        ZuulProperties properties, ServiceRouteMapper serviceRouteMapper) {
         super(server.getServlet().getServletPrefix(), discovery, properties, serviceRouteMapper, null);
     }
 
@@ -49,7 +50,7 @@ public class AdditionalRouteLocator extends DiscoveryClientRouteLocator {
      */
     @PostConstruct
     public void init() {
-        log.debug("User define some additional routes:\n {}", additionalRoutes);
+        logger.debug("User define some additional routes:\n {}", additionalRoutes);
         for (Map.Entry<String, ZuulRoute> entry : this.additionalRoutes.entrySet()) {
             ZuulRoute value = entry.getValue();
             if (!StringUtils.hasText(value.getLocation())) {
@@ -67,19 +68,18 @@ public class AdditionalRouteLocator extends DiscoveryClientRouteLocator {
     /**
      * Collects all default {@link ZuulRoute} and adds some additional
      *
-     * @return {@link LinkedHashMap} with key as route url,
-     * and value as zuul route
+     * @return {@link LinkedHashMap} with key as route url, and value as zuul route
      */
     @Override
     protected LinkedHashMap<String, ZuulRoute> locateRoutes() {
-        log.debug("Additional Zuul routes overrides default routes");
+        logger.debug("Additional Zuul routes overrides default routes");
         LinkedHashMap<String, ZuulRoute> routesMap = super.locateRoutes();
         routesMap.putAll(this.additionalRoutes.values().stream()
-                .collect(Collectors.toMap(ZuulRoute::getPath, Function.identity(),
-                        (u, v) -> {
-                            throw new IllegalStateException(String.format("Route path '%s' shouldn't duplicated", u));
-                        },
-                        LinkedHashMap::new)));
+            .collect(Collectors.toMap(ZuulRoute::getPath, Function.identity(),
+                (u, v) -> {
+                    throw new IllegalStateException(String.format("Route path '%s' shouldn't duplicated", u));
+                },
+                LinkedHashMap::new)));
         return routesMap;
     }
 }
