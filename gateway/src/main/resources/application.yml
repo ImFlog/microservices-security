@@ -1,15 +1,9 @@
-server:
-  compression:
-    enabled: true
-    mime-types: application/json
-    min-response-size: 1024
-  port: 8081
+server.port: 8081
 
 keycloak:
-  realm: test
+  realm: master
   auth-server-url: http://localhost:8080/auth/
   resource: spring-poc
-  credentials.secret: "80d8d0f1-f299-450d-b89a-a7f8682f281f"
   bearer-only: true # You can't auth from this application
 
 #Actuator

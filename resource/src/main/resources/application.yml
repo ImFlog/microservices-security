@@ -1,15 +1,9 @@
-server:
-  compression:
-    enabled: true
-    mime-types: application/json
-    min-response-size: 1024
-  port: 8084
+server.port: 8084
 
 keycloak:
   realm: master
   auth-server-url: http://localhost:8080/auth/
   resource: resource
-#  use-resource-role-mappings: true
   bearer-only: true # You can't auth from this application
 
 #Actuator
