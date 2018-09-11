@@ -3,7 +3,7 @@ server.port: 8081
 keycloak:
   realm: master
   auth-server-url: http://localhost:8080/auth/
-  resource: spring-poc
+  resource: gateway
   bearer-only: true # You can't auth from this application
 
 #Actuator

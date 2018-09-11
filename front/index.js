@@ -14,8 +14,8 @@ const CLIENT_ID = 'front';
 // We rely on https://www.npmjs.com/package/client-oauth2 for OIDC code flow
 var clientAuth = new ClientOAuth2({
     clientId: CLIENT_ID,
-    accessTokenUri: 'http://localhost:8080/auth/realms/test/protocol/openid-connect/token',
-    authorizationUri: 'http://localhost:8080/auth/realms/test/protocol/openid-connect/auth',
+    accessTokenUri: 'http://localhost:8080/auth/realms/master/protocol/openid-connect/token',
+    authorizationUri: 'http://localhost:8080/auth/realms/master/protocol/openid-connect/auth',
     redirectUri: 'http://localhost:3000/auth/callback',
     scopes: ['openid']
 });
