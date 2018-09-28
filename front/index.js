@@ -1,35 +1,10 @@
-const ClientOAuth2 = require('client-oauth2')
-const Querystring = require('querystring')
-
+const Keycloak = require('keycloak-connect');
 const hogan = require('hogan-express');
-const request = require('request');
-const cookieParser = require('cookie-parser');
+const express = require('express');
+const session = require('express-session');
+const rest = require('rest')
 
-
-const REFRESH_TOKEN_COOKIE = 'MyRefreshToken';
-const ACCESS_TOKEN_COOKIE = 'MyAccessToken';
-const CLIENT_ID = 'front';
-
-// OIDC endpoints can be found here : https://www.keycloak.org/docs/latest/server_admin/index.html#keycloak-server-oidc-uri-endpoints
-// We rely on https://www.npmjs.com/package/client-oauth2 for OIDC code flow
-var clientAuth = new ClientOAuth2({
-    clientId: CLIENT_ID,
-    accessTokenUri: 'http://localhost:8080/auth/realms/master/protocol/openid-connect/token',
-    authorizationUri: 'http://localhost:8080/auth/realms/master/protocol/openid-connect/auth',
-    redirectUri: 'http://localhost:3000/auth/callback',
-    scopes: ['openid']
-});
-
-var express = require('express')
-var app = express()
-
-// To render template
-app.set('view engine', 'html');
-app.set('views', require('path').join(__dirname, '/view'));
-app.engine('html', hogan);
-
-// To use cookies in requests
-app.use(cookieParser());
+const app = express();
 
 const server = app.listen(3000, function () {
     const host = server.address().address;
@@ -37,77 +12,99 @@ const server = app.listen(3000, function () {
     console.log('Example app listening at http://%s:%s', host, port);
 });
 
+// Register '.mustache' extension with The Mustache Express
+app.set('view engine', 'html');
+app.set('views', require('path').join(__dirname, '/view'));
+app.engine('html', hogan);
+
+// A normal un-protected public URL.
 app.get('/', function (req, res) {
-    res.render('index', { result: req.cookies[ACCESS_TOKEN_COOKIE] });
+    res.render('index');
 });
 
-app.get('/login', function (req, res) {
-    var uri = clientAuth.code.getUri()
+// Create a session-store to be used by both the express-session
+// middleware and the keycloak middleware.
+const memoryStore = new session.MemoryStore();
 
-    res.redirect(uri)
+app.use(session({
+    secret: 'mySecret',
+    resave: false,
+    saveUninitialized: true,
+    store: memoryStore
+}));
+
+// Provide the session store to the Keycloak so that sessions
+// can be invalidated from the Keycloak console callback.
+//
+// Additional configuration is read from keycloak.json file
+// installed from the Keycloak web console.
+const keycloak = new Keycloak({store: memoryStore});
+
+// Install the Keycloak middleware.
+//
+// Specifies that the user-accessible application URL to
+// logout should be mounted at /logout
+//
+// Specifies that Keycloak console callbacks should target the
+// root URL.  Various permutations, such as /k_logout will ultimately
+// be appended to the admin URL.
+app.use(keycloak.middleware({
+    logout: '/logout',
+    admin: '/'
+}));
+
+// Protected urls
+app.get('/login', keycloak.protect(), function (req, res) {
+  res.render('index', {
+    result: JSON.stringify(JSON.parse(req.session['keycloak-token']), null, 4),
+    event: '1. Authentication\n2. Login'
+  });
 });
 
-
-// TODO : we need to manage tokens expiration
-
-
-app.get('/auth/callback', function (req, res) {
-    clientAuth.code.getToken(req.originalUrl)
-        .then(function (user) {
-            // We store the tokens into cookies.
-            res.cookie(ACCESS_TOKEN_COOKIE, user.accessToken, { httpOnly: true });
-            res.cookie(REFRESH_TOKEN_COOKIE, user.refreshToken, { httpOnly: true });
-            return res.render('index', {
-                result: user.accessToken
-            });
-        });
-});
-
-app.get('/forward/auth', function (req, res) {
-    request.get('http://localhost:8081/test/auth', {
+app.get('/forward/auth', keycloak.protect(), function (req, res) {
+    rest({
+        method: 'GET',
+        path: 'http://localhost:8081/test/auth',
         headers: {
-            'Authorization': 'Bearer ' + req.cookies[ACCESS_TOKEN_COOKIE]
+            'Authorization': 'Bearer ' + JSON.parse(req.session['keycloak-token'])['access_token']
         }
-    }, function (err, httpResponse, body) {
-        console.log(httpResponse);
+    }).then(function (response) {
+        console.log(response);
         res.render('index', {
-            result: httpResponse.statusCode + ' : ' + body,
+            result: response.entity,
             event: 'forwarded request'
         })
     })
 });
 
-// Should be a way to use the client-oauth2 here too
-app.get('/refresh', function (req, res) {
-    request.post({
-        url: 'http://localhost:8080/auth/realms/test/protocol/openid-connect/token', form: {
-            grant_type: 'refresh_token',
-            refresh_token: req.cookies[REFRESH_TOKEN_COOKIE],
-            client_id: CLIENT_ID
+app.get('/forward/dumb', keycloak.protect(), function (req, res) {
+    rest({
+        method: 'GET',
+        path: 'http://localhost:8081/test/dumb',
+        headers: {
+            'Authorization': 'Bearer ' + JSON.parse(req.session['keycloak-token'])['access_token']
         }
-    }, function (err, httpResponse, body) {
-        console.log(httpResponse);
-
-        let tokens = JSON.parse(body);
-
-        // Just to check that the tokens changed
-        console.log(tokens['access_token'] != req.cookies[ACCESS_TOKEN_COOKIE]);
-        console.log(tokens['refresh_token'] != req.cookies[REFRESH_TOKEN_COOKIE]);
-
-        res.cookie(ACCESS_TOKEN_COOKIE, tokens['access_token'], { httpOnly: true });
-        res.cookie(REFRESH_TOKEN_COOKIE, tokens['refresh_token'], { httpOnly: true });
-
+    }).then(function (response) {
+        console.log(response);
         res.render('index', {
-            result: httpResponse.statusCode,
-            event: 'refresh_token'
-        });
-    });
+            result: response.entity,
+            event: 'forwarded request'
+        })
+    })
 });
 
-// TODO : add code to logout from a realm
-app.get('/logout', function (req, res) {
-    res.clearCookie(REFRESH_TOKEN_COOKIE);
-    res.clearCookie(ACCESS_TOKEN_COOKIE);
-    // logout + redirect to /
-    res.redirect('http://localhost:8080/auth/realms/test/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F');
+app.get('/forward/role', keycloak.protect(), function (req, res) {
+    rest({
+        method: 'GET',
+        path: 'http://localhost:8081/test/role',
+        headers: {
+            'Authorization': 'Bearer ' + JSON.parse(req.session['keycloak-token'])['access_token']
+        }
+    }).then(function (response) {
+        console.log(response);
+        res.render('index', {
+            result: response.entity,
+            event: 'forwarded request'
+        })
+    })
 });

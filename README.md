@@ -18,16 +18,19 @@ Every call to a backend service (i.e the gateway), trigger a token verification 
 When the call hits the resource server, we use the @PreAuthorize to specify SPEL expression to validation.
 Here we can call (via the frontend):
 - /auth => Accessible if the user is authenticated.
-- /dumb => Accessible if you have the role "DUMB_ROLE", should be very rare :)
-- /role => Accessible if you have the role "GS-TAS-JIRA-Developers", you can change that according to your account permissions.
+- /dumb => Accessible if you have the role "dumb", should be very rare :)
+- /role => Accessible if you have the role "you_can", you can change that according to your account permissions.
 
 ## Requirements
-You need Java 8, Maven, and NodeJS.
+You need Java 8, Docker and NodeJS.
 
 You also need to start a local Keycloak instance, to do so you can use the provided docker-compose file:
 `$ docker-compose up -d`.
 The port 8080 is mapped to your local port, you should be able to login as `admin`/ `admin` on http://localhost:8080.
 
+You should now be able to import the test realm settings (by navigating in the menu mange / import).
+
+You can now create a user with the role "you_can" role from the Keycloak UI. In reality, this would be done automatically using the LDAP and by enabling custom mapper between groups and roles.
 
 Then you will have to start the three apps (3 terminals)
 ```
@@ -35,3 +38,5 @@ Then you will have to start the three apps (3 terminals)
 ./gradlew resource:bootRun
 cd front && npm start
 ```
+
+You can now fire the various requests and see what works and what don't work.

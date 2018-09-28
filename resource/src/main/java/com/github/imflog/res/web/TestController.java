@@ -21,9 +21,9 @@ class TestController {
         return "You should not be able to access this ...";
     }
 
-    @PreAuthorize("hasRole('GS-TAS-JIRA-Developers')")
+    @PreAuthorize("hasRole('ROLE_YOU_CAN')")
     @RequestMapping(path = "/role")
     public String withARole() {
-        return "That's right, you have the role : GS-TAS-JIRA-Developers";
+        return "That's right, you can";
     }
 }

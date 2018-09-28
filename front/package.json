@@ -12,7 +12,10 @@
         "client-oauth2": "^4.2.1",
         "cookie-parser": "*",
         "express": "*",
+        "express-session": "^1.15.6",
         "hogan-express": "*",
-        "request": "^2.87.0"
+        "keycloak-connect": "4.0.0",
+        "request": "^2.87.0",
+        "rest": "^2.0.0"
     }
 }
