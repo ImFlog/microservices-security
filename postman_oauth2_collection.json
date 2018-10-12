@@ -1,0 +1,124 @@
+{
+	"info": {
+		"_postman_id": "fd973adf-4d8d-4b21-b788-69a2fd119694",
+		"name": "BDX.io OAuth 2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth code",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "client_id",
+							"value": "front",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/realms/master/protocol/openid-connect/auth?client_id=front&response_type=code&redirect_uri=http://localhost:3000&grant_type=authorization_code",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"realms",
+						"master",
+						"protocol",
+						"openid-connect",
+						"auth"
+					],
+					"query": [
+						{
+							"key": "client_id",
+							"value": "front"
+						},
+						{
+							"key": "response_type",
+							"value": "code"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://localhost:3000"
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code"
+						}
+					]
+				},
+				"description": "Exec in firefox"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Token",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..24v6kMlADSXVReGZyXLuFg.9MbfvmCM6pJJLd76cnQJvH5U4RVahorR9CnT6KJ9EzCB1GiSHWpTrOEwIAvuy3lrnfIh8-F23k7XRwwrptYksQ7YeSdia1MdycYBTIkv_fqHbSASASXrRC9DHWBJT8zgNz8SOfzg_FslUdAttWfFcy5lUKWXGTr0KvgJITgRPA04ajvgHONVuyPDNwa0URoGBvsixEzuozJjgDkiPIdA7xY9usa7oWqUWWrX9GSH4eZ3_HX86RiJbuexwoAw9aM_.LNvv7gfaa4eDP6-a20j_Fg",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://localhost:3000",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "front",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/realms/master/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"realms",
+						"master",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
