@@ -26,8 +26,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @KeycloakConfiguration
 public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
 
-//    @Value("${access-control-max-age}")
-//    private Long accessControlMaxAge;
 
     @Bean
     @Override
@@ -50,32 +48,7 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
         return new KeycloakSpringBootConfigResolver();
     }
 
-    // TODO : handle CORS correctly
-/*    private CorsConfiguration corsConfiguration() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(false);
-        configuration.setAllowedOrigins(Collections.singletonList(CorsConfiguration.ALL));
-        configuration.setAllowedHeaders(Collections.singletonList(CorsConfiguration.ALL));
-        configuration.setMaxAge(accessControlMaxAge);
-        configuration.addAllowedMethod(HttpMethod.OPTIONS);
-        configuration.addAllowedMethod(HttpMethod.HEAD);
-        configuration.addAllowedMethod(HttpMethod.GET);
-        configuration.addAllowedMethod(HttpMethod.PUT);
-        configuration.addAllowedMethod(HttpMethod.POST);
-        configuration.addAllowedMethod(HttpMethod.DELETE);
-        configuration.addAllowedMethod(HttpMethod.PATCH);
-        return configuration;
-    }
 
-    private CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration());
-        return source;
-    }
-
-    private Filter corsFilter() {
-        return new CorsFilter(corsConfigurationSource());
-    }*/
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
@@ -85,8 +58,6 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
                 .sessionAuthenticationStrategy(sessionAuthenticationStrategy())
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                // Should we add the cors filter ?
-                // .addFilterBefore(corsFilter(), ChannelProcessingFilter.class);
 
                 // keycloak filters for securisation
                 .and()
@@ -110,12 +81,8 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
 
                 // manage routes securisation
                 .authorizeRequests()
+                .mvcMatchers("/secured").authenticated()
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // For node JS
-                .antMatchers("/identity/verify").permitAll()
-                // allow all requests to some of the actuator endpoints - including pass-through requests to
-                // other services
-                .antMatchers("/health").permitAll()
-                .antMatchers("/info").permitAll()
                 .anyRequest().permitAll();
     }
 }

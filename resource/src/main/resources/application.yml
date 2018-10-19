@@ -5,15 +5,12 @@ keycloak:
   auth-server-url: http://localhost:8080/auth/
   resource: resource
   bearer-only: true # You can't auth from this application
+  principal-attribute: preferred_username
 
 #Actuator
+#Actuator
 management:
-  security:
-    enabled: false
-  endpoint:
-    info:
-      enabled: true
-    health:
-      enabled: true
   endpoints:
-    enabled-by-default: true
+    web:
+      exposure:
+        include: ["health", "info"]
