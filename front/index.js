@@ -61,10 +61,10 @@ app.get('/login', keycloak.protect(), function (req, res) {
   });
 });
 
-app.get('/forward/auth', keycloak.protect(), function (req, res) {
+app.get('/forward/secured', keycloak.protect(), function (req, res) {
     rest({
         method: 'GET',
-        path: 'http://localhost:8081/test/auth',
+        path: 'http://localhost:8081/secured',
         headers: {
             'Authorization': 'Bearer ' + JSON.parse(req.session['keycloak-token'])['access_token']
         }
@@ -80,7 +80,7 @@ app.get('/forward/auth', keycloak.protect(), function (req, res) {
 app.get('/forward/dumb', keycloak.protect(), function (req, res) {
     rest({
         method: 'GET',
-        path: 'http://localhost:8081/test/dumb',
+        path: 'http://localhost:8081/secured/dumb',
         headers: {
             'Authorization': 'Bearer ' + JSON.parse(req.session['keycloak-token'])['access_token']
         }
@@ -96,7 +96,7 @@ app.get('/forward/dumb', keycloak.protect(), function (req, res) {
 app.get('/forward/role', keycloak.protect(), function (req, res) {
     rest({
         method: 'GET',
-        path: 'http://localhost:8081/test/role',
+        path: 'http://localhost:8081/secured/role',
         headers: {
             'Authorization': 'Bearer ' + JSON.parse(req.session['keycloak-token'])['access_token']
         }
