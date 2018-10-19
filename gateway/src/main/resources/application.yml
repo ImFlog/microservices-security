@@ -8,21 +8,19 @@ keycloak:
 
 #Actuator
 management:
-  security:
-    enabled: false
-
-endpoints:
-  enabled: true
-  info:
-    enabled: true
-  health:
-    enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: ["health", "info"]
 
 zuul:
   routes:
-    # The test route
-    test:
-      path: /test/**
+    secured:
+      path: /secured/**
+      sensitiveHeaders:
+      url: http://localhost:8084/secured
+    open:
+      path: /open/**
       url: http://localhost:8084/
 
 channelManagementEnabled: false

@@ -51,32 +51,7 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
         return new KeycloakSpringBootConfigResolver();
     }
 
-    // TODO : ADD CORS CONFIG
-/*    private CorsConfiguration corsConfiguration() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(false);
-        configuration.setAllowedOrigins(Collections.singletonList(CorsConfiguration.ALL));
-        configuration.setAllowedHeaders(Collections.singletonList(CorsConfiguration.ALL));
-        configuration.setMaxAge(accessControlMaxAge);
-        configuration.addAllowedMethod(HttpMethod.OPTIONS);
-        configuration.addAllowedMethod(HttpMethod.HEAD);
-        configuration.addAllowedMethod(HttpMethod.GET);
-        configuration.addAllowedMethod(HttpMethod.PUT);
-        configuration.addAllowedMethod(HttpMethod.POST);
-        configuration.addAllowedMethod(HttpMethod.DELETE);
-        configuration.addAllowedMethod(HttpMethod.PATCH);
-        return configuration;
-    }
 
-    private CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration());
-        return source;
-    }
-
-    private Filter corsFilter() {
-        return new CorsFilter(corsConfigurationSource());
-    }*/
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
@@ -111,12 +86,7 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
 
                 // manage routes securisation
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS).permitAll() // For node JS
-                .antMatchers("/identity/verify").permitAll()
-                // allow all requests to some of the actuator endpoints - including pass-through requests to
-                // other services
-                .antMatchers("/health").permitAll()
-                .antMatchers("/info").permitAll()
+                .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().permitAll();
     }
 }
