@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fd973adf-4d8d-4b21-b788-69a2fd119694",
+		"_postman_id": "aedbe64e-bf37-46ba-b5f3-1e8bf8975af0",
 		"name": "BDX.io OAuth 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -24,7 +24,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/auth/realms/master/protocol/openid-connect/auth?client_id=front&response_type=code&redirect_uri=http://localhost:3000&grant_type=authorization_code",
+					"raw": "http://localhost:8080/auth/realms/master/protocol/openid-connect/auth?client_id=front&response_type=code&redirect_uri=http://localhost:3000&grant_type=authorization_code&scope=openid",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -54,6 +54,10 @@
 						{
 							"key": "grant_type",
 							"value": "authorization_code"
+						},
+						{
+							"key": "scope",
+							"value": "openid"
 						}
 					]
 				},
@@ -71,9 +75,7 @@
 				"header": [
 					{
 						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
+						"value": "application/x-www-form-urlencoded"
 					}
 				],
 				"body": {
@@ -86,7 +88,7 @@
 						},
 						{
 							"key": "code",
-							"value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..24v6kMlADSXVReGZyXLuFg.9MbfvmCM6pJJLd76cnQJvH5U4RVahorR9CnT6KJ9EzCB1GiSHWpTrOEwIAvuy3lrnfIh8-F23k7XRwwrptYksQ7YeSdia1MdycYBTIkv_fqHbSASASXrRC9DHWBJT8zgNz8SOfzg_FslUdAttWfFcy5lUKWXGTr0KvgJITgRPA04ajvgHONVuyPDNwa0URoGBvsixEzuozJjgDkiPIdA7xY9usa7oWqUWWrX9GSH4eZ3_HX86RiJbuexwoAw9aM_.LNvv7gfaa4eDP6-a20j_Fg",
+							"value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..YCJJW4BrKC1FYxaHYuATAQ.0y9dC_UbxofayE1SMO9yAJxGE06TnlZYc4C-D5NlZJJ4xWMsztI0r9rODWs3IQIiTXw7y6Rsx2w1uC04GfyoVTumklZ-c207W6nonhLUIxPSKF7oo7DKIAXg3r8nMuycyeoo2tnQ0WI4xqjQo737NtRtpX6bF4V50PF_eSjb1k0X_Gkk6TqGTS8ta8giORfn0A9SvyXnXO_fmyM4TzO86XQPbTfd0V2F7b1iZPwCo8YdldnXY0LED0ZzJHJ5nQYE._Ldvq2xyAbhj-fci6fekiA",
 							"type": "text"
 						},
 						{
@@ -97,6 +99,11 @@
 						{
 							"key": "client_id",
 							"value": "front",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
 							"type": "text"
 						}
 					]
