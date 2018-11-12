@@ -1,5 +1,11 @@
 # Keycloak POC
 
+## Support
+This repo contains the materials for the conference "La sécurité dans une architecture microservices ? Pas de soucis !"
+
+You can find the slides (in french) in the "slides" directory
+
+## Global
 This POC is composed of three projects:
 - A NodeJS application serving the frontend (using https://www.npmjs.com/package/client-oauth2)
 - A Gateway (Zuul)
