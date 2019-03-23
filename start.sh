@@ -33,3 +33,5 @@ resource=$!
 # start frontend
 
 cd front && npm install && npm start
+
+cd ../resource-dotnet && dotnet build && dotnet run
