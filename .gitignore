@@ -141,3 +141,12 @@ typings/
 
 # next.js build output
 .next
+
+# Dotnet
+[Rr]elease/
+[Dd]ebug/
+[Oo]bj/
+[Bb]in/
+[Gg]en/
+packages/
+_ReSharper*
