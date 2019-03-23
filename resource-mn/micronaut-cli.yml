@@ -1,5 +1,0 @@
-profile: service
-defaultPackage: resource.mn
----
-testFramework: spek
-sourceLanguage: kotlin

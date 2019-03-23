@@ -8,7 +8,6 @@ keycloak:
   principal-attribute: preferred_username
 
 #Actuator
-#Actuator
 management:
   endpoints:
     web:
