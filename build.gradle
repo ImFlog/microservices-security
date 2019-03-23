@@ -1,67 +1,65 @@
-wrapper {
-  distributionType = Wrapper.DistributionType.ALL
-  gradleVersion = "4.9"
-}
-
 buildscript {
-  ext {
-    springBootVersion = '2.0.4.RELEASE'
-  }
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-  }
+    ext {
+        springBootVersion = '2.1.3.RELEASE'
+    }
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 apply plugin: 'idea'
 
 subprojects {
-  apply plugin: 'java'
-  apply plugin: 'org.springframework.boot'
-  apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 
-  group = 'com.github.imflog'
-  version = '0.0.1'
-  sourceCompatibility = 1.8
+    group = 'com.github.imflog'
+    version = '0.0.1'
+    sourceCompatibility = 11
 
-  repositories {
-    jcenter()
-  }
-
-  ext {
-    keycloakVersion = '4.4.0.Final'
-  }
-
-  dependencyManagement {
-    imports {
-      mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
+    repositories {
+        jcenter()
     }
-  }
 
-  dependencies {
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.boot:spring-boot-starter-security')
-    compile('org.keycloak:keycloak-spring-boot-starter')
-    compile('org.projectlombok:lombok:1.16.20')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-  }
+    ext {
+        keycloakVersion = '5.0.0'
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
+        }
+    }
+
+    dependencies {
+        implementation('org.springframework.boot:spring-boot-starter-actuator')
+        implementation('org.springframework.boot:spring-boot-starter-web')
+        implementation('org.springframework.boot:spring-boot-starter-security')
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+        
+        implementation('org.keycloak:keycloak-spring-boot-starter')
+        implementation('org.projectlombok:lombok:1.18.6')
+        
+        testCompile('org.springframework.boot:spring-boot-starter-test')
+    }
 }
 
 project(':gateway') {
-  ext {
-    springCloudVersion = 'Finchley.SR1'
-  }
-
-  dependencyManagement {
-    imports {
-      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    ext {
+        springCloudVersion = 'Greenwich.RELEASE'
     }
-  }
 
-  dependencies {
-    compile("org.springframework.cloud:spring-cloud-starter-netflix-zuul")
-  }
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+    dependencies {
+        compile("org.springframework.cloud:spring-cloud-starter-netflix-zuul")
+    }
 }
