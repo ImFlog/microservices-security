@@ -1,0 +1,28 @@
+<h1 style="width: 100%; text-align: center;">NodeJS Keycloak Example</h1>
+<hr />
+
+<div class="nav">
+    <ul>
+        <li>
+            <a href="#" (click)="login()">Login</a>
+        </li>
+        <li>
+            <a href="#" (click)="logout()">Logout</a>
+        </li>
+        <li>
+            <a href="#" (click)="getSecured()">Forward to /secured through gateway</a>
+        </li>
+        <li>
+            <a href="#" (click)="getSecuredDumb()">Forward to /secured/dumb through gateway</a>
+        </li>
+        <li>
+            <a href="#" (click)="getSecuredRole()">Forward to /secured/role through gateway</a>
+        </li>
+    </ul>
+</div>
+<div class="content">
+    <h2>Result</h2>
+    <pre id="output">
+{{result}}
+    </pre>
+</div>
