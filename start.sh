@@ -12,6 +12,7 @@ keycloak=$(docker run -d --name=keycloak \
     -v $(pwd)/realm-export.json:/import/realm-export.json \
     -p 8080:8080 \
     jboss/keycloak)
+sleep 1
 docker exec ${keycloak} keycloak/bin/add-user-keycloak.sh -r keycloak-demo -u user -p test1234 --roles yes_we_can
 docker restart ${keycloak}
 

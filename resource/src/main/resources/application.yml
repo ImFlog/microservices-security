@@ -1,7 +1,7 @@
 server.port: 8084
 
 keycloak:
-  realm: master
+  realm: keycloak-demo
   auth-server-url: http://localhost:8080/auth/
   resource: resource
   bearer-only: true # You can't auth from this application

@@ -1,7 +1,7 @@
 server.port: 8081
 
 keycloak:
-  realm: master
+  realm: keycloak-demo
   auth-server-url: http://localhost:8080/auth/
   resource: gateway
   bearer-only: true # You can't auth from this application
@@ -22,7 +22,5 @@ zuul:
     open:
       path: /open/**
       url: http://localhost:8084/
-
-channelManagementEnabled: false
 
 access-control-max-age: 86400
