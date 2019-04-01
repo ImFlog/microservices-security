@@ -21,6 +21,7 @@ function cleanup {
     docker rm -f ${keycloak}
     kill ${gateway}
     kill ${resource}
+    kill ${resource-dotnet}
 }
 
 trap cleanup EXIT
@@ -33,6 +34,11 @@ gateway=$!
 resource=$!
 # start frontend
 
-cd front && npm install && npm start
+cd resource-dotnet
+dotnet clean
+dotnet build
+dotnet run &
+resource-dotnet=$!
 
-cd ../resource-dotnet && dotnet build && dotnet run
+cd ../front && npm install && npm start
+
