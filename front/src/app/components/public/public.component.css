@@ -1,0 +1,10 @@
+.imgDiv {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    height: 500px;
+}
+
+img {
+    height: 500px;
+}

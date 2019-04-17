@@ -10,7 +10,7 @@ export const environment = {
         realm: 'keycloak-demo',
         clientId: 'front',
     }
-};
+}
 
 /*
  * For easier debugging in development mode, you can import the following file

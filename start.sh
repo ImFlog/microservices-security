@@ -40,5 +40,5 @@ dotnet build
 dotnet run &
 resource-dotnet=$!
 
-cd ../front && npm install && npm start
+cd ../front && npm install && ng serve --aot
 

@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { stringify } from '@angular/core/src/util';
-import { KeycloakService } from 'keycloak-angular';
+import {Component, OnInit} from '@angular/core'
+import {HttpClient} from '@angular/common/http'
+import {environment} from '../../../environments/environment'
+import {KeycloakService} from 'keycloak-angular'
 
 @Component({
     selector: 'app-dashboard',
@@ -12,22 +11,22 @@ import { KeycloakService } from 'keycloak-angular';
 export class DashboardComponent implements OnInit {
     result: string;
 
-    constructor(private http: HttpClient, private keycloakAngular: KeycloakService) { }
+    constructor(private http: HttpClient, private keycloakService: KeycloakService) { }
 
     ngOnInit() {
-        this.keycloakAngular.isLoggedIn().then(isLogged => {
+        this.keycloakService.isLoggedIn().then(isLogged => {
             if (isLogged) {
-                this.keycloakAngular.getToken().then(token => this.result = 'Logged in with token : ' + token);
+                this.keycloakService.getToken().then(token => this.result = 'Logged in with token : ' + token)
             }
-        });
+        })
     }
 
     login() {
-        this.keycloakAngular.login();
+        this.keycloakService.login();
     }
 
     logout() {
-        this.keycloakAngular.logout();
+        this.keycloakService.logout();
     }
 
     getSecured() {
@@ -36,7 +35,7 @@ export class DashboardComponent implements OnInit {
         }).subscribe(
             (res: string) => this.result = res,
             error => this.result = error.message
-        );
+        )
     }
 
     getSecuredDumb() {
@@ -45,7 +44,7 @@ export class DashboardComponent implements OnInit {
         }).subscribe(
             (res: string) => this.result = res,
             error => this.result = error.message
-        );
+        )
     }
 
     getSecuredRole() {
@@ -54,6 +53,6 @@ export class DashboardComponent implements OnInit {
         }).subscribe(
             (res: string) => this.result = res,
             error => this.result = error.message
-        );
+        )
     }
 }
